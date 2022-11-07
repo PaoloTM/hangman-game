@@ -1,4 +1,9 @@
 from random import randint
+import os
+
+# --- Limpiar pantalla ---
+def clean_screen():
+    os.system("cls")
 
 # --- Main menu ---
 def main_menu():
@@ -27,7 +32,24 @@ def read_data():
 
 # seleccion de una palabra al azar
 def random_word(words):
-    word = words[randint(1, 171)]
+    word = words[randint(0, 170)]
+    
+    return word
+
+# Reemplazamos las vocales con acentos a sin acento, para evitar errores de tipeo
+# ERROR FALTA VERIFICAR COMO UTILIZAR LAS TUPLAS Y COMO REEMPLAZAR EL VALOR A POR EL B
+def delete_accent(word):
+    letter_accent = (
+        ("á", "a") 
+        ("é", "e")
+        ("í", "i")
+        ("ó", "o") 
+        ("ú", "u")
+    ) 
+    for i in range(len(word)):
+        for a, b in letter_accent:
+            if word[i] == a:
+                word[i] = b
     
     return word
 
@@ -47,31 +69,47 @@ def hangman_game(word):
     
     # el while se encarga de controlar que el score del jugador no alcance el limite de letras en la palabra que esta dentro de la variable 'points'
     while score < points:
-        player_write = input("Ingrese una letra: ")
+        player_write = input("Ingrese una letra: ").lower()
+        
+        # comprobamos que la letra no haya sido ingresada anteriormente
+        while player_write in aux:
+            player_write = input("Ingrese otra letra, no repetida: ").lower()
         
         # recorremos la palabra convertida en lista / comprobamos si la letra que dio el usuario es igual a la letra actual en la palabra y tambien que esa letra no haya sido escrita antes con la variable aux guardamos ese dato / si la letra es igual a la letra en la palabra sumaremos un punto a score / reemplazamos el '-' en la posicion actual por la letra que dio el usuario / guardamos esa letra en la variable aux para que el usuario cuando la vuelva a ingresar sea una letra erronea
         for i in range(len(word)):
-            if player_write in word[i] and player_write != aux:
+            if player_write == word[i]:
                 score += 1
                 hidden_string[i] = player_write
                 view_string = " ".join(hidden_string)
-                # error en el aux deberia ser un array donde guardar las letras y recorrerlo con un for con doble validacion
                 aux.append(player_write)
-        print(view_string)
+        if score > 0:
+            print(view_string)
+        else:
+            continue
     
         
     print("GANASTE!!!!!!!!")
 
 def run():
-    words = read_data()
-    word = random_word(words)
-    
+    clean_screen()
     main_menu()
     
-    hidden_word(word)
-    print(word)
+    play = int(input())
     
-    hangman_game(word)
+    while play == 1:
+        clean_screen()
+        words = read_data()
+        word = random_word(words)
+        word = delete_accent(word)
+        print(word)
+        hangman_game(word)
+        clean_screen()
+        main_menu()
+        play = int(input())
+    
+    if play == 2:
+        clean_screen()
+        exit()
     
     
 
