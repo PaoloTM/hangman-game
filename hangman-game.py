@@ -37,7 +37,6 @@ def random_word(words):
     return word
 
 # Reemplazamos las vocales con acentos a sin acento, para evitar errores de tipeo
-# ERROR FALTA VERIFICAR COMO UTILIZAR LAS TUPLAS Y COMO REEMPLAZAR EL VALOR A POR EL B
 def delete_accent(word):
     word = list(word)
     letter_accent = (
@@ -63,18 +62,24 @@ def hidden_word(word):
 def hangman_game(word):
     # obtenemos la palabra oculta / convertimos en una lista a nuestra palabra / seteamos una variable score en 0 / seteamos una variable aux vacia / seteamos variable puntos para obtener el maximo de puntos
     hidden_string = hidden_word(word)
-    # word = list(word)
+    # word = list(word) // los seteamos en delete_accent
     score = 0
     aux = ['']
     points = int(len(word)) - 1
+    # seteamos la palabra oculta para mostrarsela al usuario
+    view_string = " ".join( hidden_string)
     
     # el while se encarga de controlar que el score del jugador no alcance el limite de letras en la palabra que esta dentro de la variable 'points'
     while score < points:
+        clean_screen()
+        print(view_string)
         player_write = input("Ingrese una letra: ").lower()
         
         # comprobamos que la letra no haya sido ingresada anteriormente
-        while player_write in aux:
-            player_write = input("Ingrese otra letra, no repetida: ").lower()
+        while (player_write in aux) or (len(player_write) > 1):
+            clean_screen()
+            print(view_string)
+            player_write = input("Ingrese una letra valida: ").lower()
         
         # recorremos la palabra convertida en lista / comprobamos si la letra que dio el usuario es igual a la letra actual en la palabra y tambien que esa letra no haya sido escrita antes con la variable aux guardamos ese dato / si la letra es igual a la letra en la palabra sumaremos un punto a score / reemplazamos el '-' en la posicion actual por la letra que dio el usuario / guardamos esa letra en la variable aux para que el usuario cuando la vuelva a ingresar sea una letra erronea
         for i in range(len(word)):
@@ -84,6 +89,7 @@ def hangman_game(word):
                 view_string = " ".join(hidden_string)
                 aux.append(player_write)
         if score > 0:
+            clean_screen()
             print(view_string)
         else:
             continue
@@ -94,24 +100,27 @@ def hangman_game(word):
 def run():
     clean_screen()
     main_menu()
+    play = 0
     
-    play = int(input())
+    while play != 2:
+        if play == 1:
+            clean_screen()
+            words = read_data()
+            word = random_word(words)
+            word = delete_accent(word)
+            print(word)
+            hangman_game(word)
+            clean_screen()
+            main_menu()
+        try:
+            play = int(input("seleccione una opcion: "))
+        except:
+            clean_screen()
+            main_menu()
+            print("Ingrese una opcion valida")
     
-    while play == 1:
-        clean_screen()
-        words = read_data()
-        word = random_word(words)
-        word = delete_accent(word)
-        print(word)
-        hangman_game(word)
-        clean_screen()
-        main_menu()
-        play = int(input())
-    
-    if play == 2:
-        clean_screen()
-        exit()
-    
+    clean_screen()
+    exit()
     
 
 if __name__ == '__main__':
