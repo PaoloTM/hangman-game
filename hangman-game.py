@@ -39,11 +39,12 @@ def random_word(words):
 # Reemplazamos las vocales con acentos a sin acento, para evitar errores de tipeo
 # ERROR FALTA VERIFICAR COMO UTILIZAR LAS TUPLAS Y COMO REEMPLAZAR EL VALOR A POR EL B
 def delete_accent(word):
+    word = list(word)
     letter_accent = (
-        ("á", "a") 
-        ("é", "e")
-        ("í", "i")
-        ("ó", "o") 
+        ("á", "a"),
+        ("é", "e"),
+        ("í", "i"),
+        ("ó", "o"),
         ("ú", "u")
     ) 
     for i in range(len(word)):
@@ -62,7 +63,7 @@ def hidden_word(word):
 def hangman_game(word):
     # obtenemos la palabra oculta / convertimos en una lista a nuestra palabra / seteamos una variable score en 0 / seteamos una variable aux vacia / seteamos variable puntos para obtener el maximo de puntos
     hidden_string = hidden_word(word)
-    word = list(word)
+    # word = list(word)
     score = 0
     aux = ['']
     points = int(len(word)) - 1
